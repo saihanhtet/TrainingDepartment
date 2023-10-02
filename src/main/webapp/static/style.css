@@ -1,0 +1,83 @@
+* {
+	outline: 0px dashed black !important;
+}
+
+[data-bs-theme="custom"] {
+	--bs-body-color: black;
+	--bs-body-color-rgb: #{to-rgb($black)};
+	--bs-body-bg: whitesmoke;
+	--bs-body-bg-rgb: #{to-rgb($white)};
+	--bs-tertiary-bg: #{$blue-200};
+
+	.dropdown-menu {
+		--bs-dropdown-bg: #{mix($blue-500, $blue-600)};
+		--bs-dropdown-link-active-bg: #{$blue-700};
+	}
+
+	.bg-info {
+		--bs-bg-opacity: 1;
+		background-color: cyan !important;
+	}
+}
+
+.intro-img {
+	width: 100%;
+	height: auto;
+	margin: 10px 0px;
+	border-radius: 10px;
+	border: 1px solid darkblue;
+}
+
+a {
+	color: black !important;
+}
+
+
+.course_view tbody {
+	display: block;
+	height: 400px !important;
+	width: 100%;
+	overflow: auto;
+}
+
+.course_view thead,
+.course_view tbody tr {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+	/* even columns width , fix width of table too*/
+}
+
+.course_view td:first-child,
+.course_view th:first-child {
+	width: 50px;
+}
+.course_view td:last-child,
+.course_view th:last-child {
+	width: 100px;
+}
+
+.course_view td:nth-child(2),
+.course_view th:nth-child(2) {
+	width: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}

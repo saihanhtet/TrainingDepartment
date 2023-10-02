@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	id="WebApp_ID" version="4.0">
+	<display-name>TrainingDepartment</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>com.servlet.Login</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/com.servlet.Login</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Register</servlet-name>
+		<servlet-class>com.servlet.Register</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Register</servlet-name>
+		<url-pattern>/com.servlet.Register</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CourseController</servlet-name>
+		<servlet-class>com.servlet.CourseController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CourseController</servlet-name>
+		<url-pattern>/com.servlet.CourseController</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AdminDashboard</servlet-name>
+		<servlet-class>com.servlet.AdminDashboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdminDashboard</servlet-name>
+		<url-pattern>/com.servlet.AdminDashboard</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CourseUserRegistration</servlet-name>
+		<servlet-class>com.servlet.CourseUserRegistration</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CourseUserRegistration</servlet-name>
+		<url-pattern>/com.servlet.CourseUserRegistration</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EmailSender</servlet-name>
+		<servlet-class>com.servlet.EmailSender</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CourseUserRegistration</servlet-name>
+		<url-pattern>/com.servlet.EmailSender</url-pattern>
+	</servlet-mapping>
+
+</web-app>
