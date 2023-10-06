@@ -186,8 +186,56 @@ public class DBFunctions {
 
 		return courses;
 	}
-	
-	public boolean insertCourses(String course_name, String course_price) {
+
+	public boolean isCourseExists(String courseName) {
+		boolean exists = false;
+		DBmanager dbMgr = new DBmanager();
+		Connection conn = null;
+
+		try {
+			conn = dbMgr.getConnection();
+			String sql = "SELECT COUNT(*) FROM courses WHERE course_name = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, courseName);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int count = resultSet.getInt(1);
+				exists = (count > 0); // If count is greater than 0, the course exists
+			}
+			resultSet.close();
+			conn.close();
+		} catch (ClassNotFoundException | SQLException | IOException e) {
+			e.printStackTrace();
+		}
+
+		return exists;
+	}
+	public boolean isUserExists(String email) {
+		boolean exists = false;
+		DBmanager dbMgr = new DBmanager();
+		Connection conn = null;
+
+		try {
+			conn = dbMgr.getConnection();
+			String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, email);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int count = resultSet.getInt(1);
+				exists = (count > 0); // If count is greater than 0, the user exists
+			}
+			resultSet.close();
+			conn.close();
+		} catch (ClassNotFoundException | SQLException | IOException e) {
+			e.printStackTrace();
+		}
+
+		return exists;
+	}
+
+	public boolean insertCourses(String course_name, String course_price)
+			throws java.sql.SQLIntegrityConstraintViolationException {
 		try (Connection conn = new DBmanager().getConnection()) {
 			if (conn != null) {
 				String query = "INSERT INTO TrainingDB.courses (course_name, price) VALUES (?, ?)";
@@ -198,7 +246,7 @@ public class DBFunctions {
 					return result == 1;
 				}
 			}
-		} catch (ClassNotFoundException | SQLException |IOException e1) {
+		} catch (ClassNotFoundException | SQLException | IOException e1) {
 			e1.printStackTrace();
 		}
 		return false;
@@ -222,17 +270,79 @@ public class DBFunctions {
 		return false;
 	}
 
+	public boolean deleteUser(int userId) {
+		try (Connection conn = new DBmanager().getConnection()) {
+			if (conn != null) {
+				String query = "DELETE FROM TrainingDB.users WHERE id = ?";
+				try (PreparedStatement prepare_statement = conn.prepareStatement(query)) {
+					prepare_statement.setInt(1, userId);
+					int result = prepare_statement.executeUpdate();
+					return result == 1;
+				}
+			}
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean updateUser(User user) {
+		try (Connection conn = new DBmanager().getConnection()) {
+			if (conn != null) {
+				String query = "UPDATE TrainingDB.users SET name=?,  email=?, password=?, is_admin=? WHERE id=?";
+				PreparedStatement preparedStatement = conn.prepareStatement(query);
+				preparedStatement.setString(1,user.getUsername());
+				preparedStatement.setString(2,user.getEmail());
+				preparedStatement.setString(3,user.getPassword());
+				preparedStatement.setBoolean(4,user.isAdmin());
+				preparedStatement.setInt(5,user.getId());
+				int rowsAffected = preparedStatement.executeUpdate();
+				return rowsAffected == 1;
+			}
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public User getUser(int userId) {
+		User user = new User();
+		try (Connection conn = new DBmanager().getConnection()) {
+			if (conn != null) {
+				String query = "SELECT * FROM TrainingDB.users WHERE id = ?";
+				try (PreparedStatement prepare_statement = conn.prepareStatement(query)) {
+					prepare_statement.setInt(1, userId);
+					ResultSet resultSet = prepare_statement.executeQuery();
+					if (resultSet.next()) {
+						user.setId(resultSet.getInt("id"));
+						user.setUsername(resultSet.getString("name"));
+						user.setEmail(resultSet.getString("email"));
+						user.setAdmin(resultSet.getBoolean("is_admin"));
+						user.setPassword(resultSet.getString("password"));
+					}
+					resultSet.close();
+					conn.close();
+					return user;
+				}
+			}
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public boolean updateCourse(int courseId, String courseNewName, String courseNewPrice) {
 		try (Connection conn = new DBmanager().getConnection()) {
 			if (conn != null) {
 				String query = "UPDATE TrainingDB.courses SET course_name=?, price=? WHERE id=?";
-	            try (PreparedStatement prepare_statement = conn.prepareStatement(query)) {
-	                prepare_statement.setString(1, courseNewName);
-	                prepare_statement.setString(2, courseNewPrice);
-	                prepare_statement.setInt(3, courseId);
-	                int result = prepare_statement.executeUpdate();
-	                return result == 1;
-	            }
+				try (PreparedStatement prepare_statement = conn.prepareStatement(query)) {
+					prepare_statement.setString(1, courseNewName);
+					prepare_statement.setString(2, courseNewPrice);
+					prepare_statement.setInt(3, courseId);
+					int result = prepare_statement.executeUpdate();
+					return result == 1;
+				}
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

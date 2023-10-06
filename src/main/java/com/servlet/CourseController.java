@@ -2,6 +2,8 @@ package com.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -126,30 +128,47 @@ public class CourseController extends HttpServlet {
 			if (filePart != null) {
 				try (InputStream fileStream = filePart.getInputStream()) {
 					List<Course> courseList = ExcelReader.readCoursesFromExcel(fileStream);
-					//List<> errorCourseList  = new ArrayList<>();
+					List<String> duplicateCourseList = new ArrayList<>();
 					for (Course course : courseList) {
 						try {
-							dbFunctions.insertCourses(course.getName(), course.getPrice());
-							System.out.println(course.getName() + " : " + course.getPrice());
-						} catch(Exception e) {
-							System.out.println(course.getName() + " : is duplicate.");
+							if (!dbFunctions.isCourseExists(course.getName())) {
+								dbFunctions.insertCourses(course.getName(), course.getPrice());
+								System.out.println(course.getName() + " : " + course.getPrice());
+							} else {
+								System.out.println(course.getName() + " : is duplicate.");
+								duplicateCourseList.add(course.getName());
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 					}
-					response.sendRedirect("AdminDashboard?msg=Successfully added the Excel data!");
+					if (!duplicateCourseList.isEmpty()) {
+						response.sendRedirect(
+								"AdminDashboard?msg=Duplicate courses: " + String.join(", ", duplicateCourseList));
+					} else {
+						response.sendRedirect("AdminDashboard?msg=Successfully added the Excel data!");
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					response.sendRedirect("AdminDashboard?msg=Please check your excel file");
+					response.sendRedirect("AdminDashboard?msg=An error occurred while processing the Excel file.");
 				}
 			}
 		} else {
 			String course_name = request.getParameter("course_name");
 			String course_price = request.getParameter("course_price");
-			Boolean result = dbFunctions.insertCourses(course_name, course_price);
-			if (result.equals(true)) {
-				response.sendRedirect("AdminDashboard?msg=Successfully added the course.");
-			} else {
-				response.sendRedirect("AdminDashboard?msg=Something went wrong.");
+			Boolean result;
+			try {
+				result = dbFunctions.insertCourses(course_name, course_price);
+				if (result.equals(true)) {
+					response.sendRedirect("AdminDashboard?msg=Successfully added the course.");
+				} else {
+					response.sendRedirect("AdminDashboard?msg=Something went wrong.");
+				}
+			} catch (SQLIntegrityConstraintViolationException e) {
+				e.printStackTrace();
+				response.sendRedirect("AdminDashboard?msg=Something went wrong SQLViolation.");
 			}
+
 		}
 
 		doGet(request, response);

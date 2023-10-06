@@ -66,5 +66,14 @@
 		<servlet-name>CourseUserRegistration</servlet-name>
 		<url-pattern>/com.servlet.EmailSender</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>UserController</servlet-name>
+		<servlet-class>com.servlet.UserController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserController</servlet-name>
+		<url-pattern>/com.servlet.UserController</url-pattern>
+	</servlet-mapping>
 
 </web-app>

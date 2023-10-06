@@ -57,7 +57,7 @@
 				<div
 					class="modal-footer d-flex flex-column justify-content-center align-items-center gap-2">
 					<p class="text-center">
-						<a href="#fogotPassword">Forgot Password?</a>| <a href="#"
+						<a href="./forgotPassword.jsp">Forgot Password?</a>| <a href="#"
 							id="registerLink">Not user?</a>
 					</p>
 					<button type="submit" class="btn btn-primary w-100">Login</button>
@@ -243,6 +243,7 @@
 							<th>Username</th>
 							<th class="d-none d-md-block d-lg-block d-xl-block">Email</th>
 							<th>IsAdmin</th>
+							<th>Admin</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -257,6 +258,10 @@
 							<td><%=user.getUsername()%></td>
 							<td class="d-none d-md-block d-lg-block d-xl-block"><%=user.getEmail()%></td>
 							<td><%=user.isAdmin()%></td>
+							<td><a href="UserController/update/<%=user.getId()%>"
+								class="ms-2"><i class="bi bi-pen-fill"></i></a><a
+								href="UserController/delete/<%=user.getId()%>" class="ms-2"><i
+									class="bi bi-trash3"></i></a></td>
 						</tr>
 						<%
 						}
