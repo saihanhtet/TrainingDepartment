@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.database.DBFunctions;
 import com.database.DBmanager;
+import com.database.Email;
 import com.database.HashKeyUtil;
 import com.entity.User;
 
@@ -27,6 +29,45 @@ public class Login extends HttpServlet {
 	public Login() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String email = request.getParameter("email");
+		DBmanager dbMgr = new DBmanager();
+		DBFunctions dbFunctions = new DBFunctions();
+		Connection conn = null;
+		User user = new User();
+		try {
+			conn = dbMgr.getConnection();
+			boolean result = dbFunctions.isUserExists(email);
+			if (result) {
+				String query = "SELECT * FROM TrainingDB.users WHERE email = ?";
+				PreparedStatement prepare_statement = conn.prepareStatement(query);
+				prepare_statement.setString(1, email);
+				ResultSet resultSet = prepare_statement.executeQuery();
+				String password =null;
+				if (resultSet.next()) {
+					user.setId(resultSet.getInt("id"));
+					user.setUsername(resultSet.getString("name"));
+					user.setEmail(resultSet.getString("email"));
+					user.setAdmin(resultSet.getBoolean("is_admin"));
+					password = user.getUsername()+"_password";
+					String hashedPassword = HashKeyUtil.hashSecretKey(password);
+					user.setPassword(hashedPassword);
+				}
+				boolean result_output = dbFunctions.updateUser(user);
+				if (result_output) {
+					new Email().sendEmail(user.getEmail(), "Your Password", "This is your password : "+password+".");
+				}
+				resultSet.close();
+				conn.close();
+				response.sendRedirect("./index.jsp?msg=Please check your email");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

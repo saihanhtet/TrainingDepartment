@@ -23,8 +23,8 @@ public class Email {
         String info = courseArray[courseArray.length - 1].split("\\)")[0];
         String scheduleTime = info.equalsIgnoreCase("evening") ? "6.00 PM to 9.00 PM" : "9.00 AM to 11.00 AM";
 
-        final String username = "i wont tell you";
-        final String password = "also this";
+        final String username = "luciusthebutler@gmail.com";
+        final String password = "sgmj rqfb iazf hxaa";
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");

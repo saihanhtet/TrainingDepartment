@@ -50,12 +50,13 @@ public class Register extends HttpServlet {
 	    // Check if passwords match
 	    if (!password.equals(password_con)) {
 	        try (PrintWriter out = response.getWriter()) {
-	            out.println("Passwords do not match. Please try again.");
+	            response.sendRedirect("index.jsp?msg=Passwords do not match. Please try again.");
 	        }
 	        return;
 	    }
 
 	    String hashedPassword = HashKeyUtil.hashSecretKey(password);
+	    System.out.println(hashedPassword);
 	    user.setUsername(username);
 	    user.setPassword(hashedPassword);
 	    user.setEmail(email);
